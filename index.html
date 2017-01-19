@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>OGG Decoding</title>
+</head>
+<body>
+  <input type="file" id="files">
+  <script type="text/javascript" src="dist/ogg.js"></script>
+  <script>
+    document.getElementById('files').addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        var fileBuffer = new ogg.FileBuffer(this.result);
+      });
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+</body>
