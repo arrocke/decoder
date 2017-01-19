@@ -1,3 +1,3 @@
-import FileBuffer from './ogg/file-buffer'
+import FileBuffer from './util/file-buffer'
 
 export {FileBuffer}
