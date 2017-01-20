@@ -19,13 +19,25 @@ describe('OggDecoder', () => {
 
     describe('decodeHeader', () => {
       it('It should throw an error if the capture pattern is not found.', () => {
-        view.setUint8(0)
+        view.setUint8(1, 0)
         expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
       })
 
       it('It should not throw an error if the capture pattern is found.', () => {
         expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
       })
+
+      it('It should throw an error if the stream structure version is invalid.', () => {
+        view.setUint8(4, 1)
+        expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
+      })
+
+      it('It should not throw an error if the stream sturcture version is correct.', () => {
+        expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
+      })
+
+      // header type flag
+      // granule position
     })
   })
 })
