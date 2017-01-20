@@ -7,15 +7,11 @@ export default class FileBuffer {
     return this._view.byteLength;
   }
   getByte(offset) {
-    if (offset < this.byteLength)
-      return this._view.getUint8(offset)
-    else
-      return null
+    return this._view.getUint8(offset)
   }
   getBytes(offset, length) {
     let bytes = []
-    let bound = Math.min(offset + length, this.byteLength)
-    for (let i = offset; i < bound; i++)
+    for (let i = offset; i < offset + length; i++)
       bytes.push(this._view.getUint8(i))
     return bytes
   }
