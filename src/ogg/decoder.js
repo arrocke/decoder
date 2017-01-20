@@ -1,9 +1,8 @@
-import FileBuffer from '../util/file-buffer'
+import BufferIterator from '../util/buffer-iterator'
 
-export default class OggDecoder extends FileBuffer {
+export default class OggDecoder extends BufferIterator {
   constructor(buffer) {
     super(buffer)
-    this._position = 0
   }
   readByte() {
     let byte = super.getByte(this._position)
