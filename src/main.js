@@ -1,3 +1,3 @@
-import FileBuffer from './util/file-buffer'
+import OggDecoder from './ogg/ogg-decoder'
 
-export {FileBuffer}
+export {OggDecoder}

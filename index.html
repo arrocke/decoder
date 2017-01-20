@@ -11,7 +11,8 @@
       var file = e.target.files[0];
       var reader = new FileReader();
       reader.addEventListener('load', function () {
-        var fileBuffer = new ogg.FileBuffer(this.result);
+        var decoder = new ogg.OggDecoder(this.result);
+        decoder.decodeHeader();
       });
       reader.readAsArrayBuffer(file);
     });
