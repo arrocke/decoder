@@ -1,6 +1,4 @@
-import createBuffer from './create-buffer'
-
-export default createBuffer([
+export default [
   '4f67675300',
   ''
-].join(''))
+].join('')

@@ -5,8 +5,14 @@ export default class BufferIterator {
     this._position = 0
   }
   getByte() {
-    let byte = this._view.getUint8(this._position)
-    this._position += 1
-    return byte
+    return this._view.getUint8(this._position++)
+  }
+  getBytes(len) {
+    let bytes = 0
+    for (var i = 0; i < len; i++) {
+      bytes *= 256
+      bytes += this._view.getUint8(this._position++)
+    }
+    return bytes
   }
 }

@@ -1,6 +1,7 @@
 import {expect} from 'chai'
 import OggDecoder from '../../../src/ogg/decoder'
-import oggHeader from '../buffers/ogg-header.js'
+import createBuffer from '../buffers/create-buffer'
+import oggHeader from '../buffers/ogg-header'
 
 describe('OggDecoder', () => {
   describe('construction', () => {
@@ -8,15 +9,22 @@ describe('OggDecoder', () => {
   })
 
   describe('functionality', () => {
-    describe('decodeHeader', () => {
-      var buffer
+    var buffer, decoder, view
 
-      before(() => {
-        buffer = oggHeader
+    beforeEach(() => {
+      buffer = createBuffer(oggHeader)
+      view = new DataView(buffer)
+      decoder = new OggDecoder(buffer)
+    })
+
+    describe('decodeHeader', () => {
+      it('It should throw an error if the capture pattern is not found.', () => {
+        view.setUint8(0)
+        expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
       })
 
-      it('It should be true.', () => {
-        expect(buffer.byteLength).to.equal(5)
+      it('It should not throw an error if the capture pattern is found.', () => {
+        expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
       })
     })
   })
