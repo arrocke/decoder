@@ -5,7 +5,9 @@
   "scripts": {
     "build": "webpack",
     "build-tests": "webpack --config webpack.test.config.js",
-    "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive test"
+    "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive test",
+    "watch-src": "webpack --watch",
+    "watch-tests": "webpack --config webpack.test.config.js --watch"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
