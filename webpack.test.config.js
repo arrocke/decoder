@@ -1,10 +1,10 @@
+var glob = require('glob');
+
 module.exports = {
-  entry: './src/main.js',
+  entry: glob.sync('./test/**/*.mocha.js'),
   output: {
     path: __dirname + '/dist',
-    filename: 'ogg.js',
-    library: 'ogg',
-    libraryTarget: 'umd'
+    filename: 'tests.js',
   },
   module: {
     loaders: [
