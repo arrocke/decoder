@@ -44,6 +44,20 @@ describe('BufferIterator', () => {
       iterator = new BufferIterator(buffer, offset, length)
     }
 
+    describe('hasBytes', () => {
+      it('It should return true if position is less than the length.', () => {
+        initIterator()
+        iterator._position = 0
+        expect(iterator.hasBytes).to.be.true
+      })
+
+      it('It should return false if position is greater than or equal to the length.', () => {
+        initIterator()
+        iterator._position = iterator._view.byteLength
+        expect(iterator.hasBytes).to.be.false
+      })
+    })
+
     describe('getByte()', () => {
       it('It should return the byte as an integer.', () => {
         initIterator()

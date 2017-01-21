@@ -1,7 +1,8 @@
 import {expect} from 'chai'
 import OggDecoder from '../../../src/ogg/decoder'
+import Bitstream from '../../../src/ogg/bitstream'
 import createBuffer from '../buffers/create-buffer'
-import oggHeader from '../buffers/ogg-header'
+import validVideo from '../buffers/valid-video'
 
 describe('OggDecoder', () => {
   describe('construction', () => {
@@ -11,13 +12,35 @@ describe('OggDecoder', () => {
   describe('functionality', () => {
     var buffer, decoder, view
 
-    beforeEach(() => {
-      buffer = createBuffer(oggHeader)
-      view = new DataView(buffer)
-      decoder = new OggDecoder(buffer)
+
+    describe('decode()', () => {
+      describe('for valid ogg files', () => {
+        var bitstreams
+
+        before(() => {
+          buffer = createBuffer(validVideo)
+          view = new DataView(buffer)
+          decoder = new OggDecoder(buffer)
+          bitstreams = decoder.decode()
+        })
+
+        it('It should return an array of bitstreams.', () => {
+          expect(bitstreams[0]).to.be.instanceOf(Bitstream)
+          expect(bitstreams[1]).to.be.instanceOf(Bitstream)
+        })
+      })
+
+      describe('for invalid ogg files', () => {
+        beforeEach(() => {
+          buffer = createBuffer(validVideo)
+          view = new DataView(buffer)
+          decoder = new OggDecoder(buffer)
+        })
+
+      })
     })
 
-    describe('decodeHeader', () => {
+    describe.skip('decodeHeader', () => {
       it('It should throw an error if the capture pattern is not found.', () => {
         view.setUint8(1, 0)
         expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
@@ -36,8 +59,9 @@ describe('OggDecoder', () => {
         expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
       })
 
-      // header type flag
-      // granule position
+      it('It should add a new bitstream if the header as a header type of BOS.', () => {
+        deocder.decodeHeader()
+      })
     })
   })
 })

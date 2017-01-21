@@ -4,6 +4,12 @@ export default class BufferIterator {
     this._view = new DataView(buffer, offset, length)
     this._position = 0
   }
+  get _byteLength() {
+    return this._view.byteLength
+  }
+  get hasBytes() {
+    return this._position < this._byteLength
+  }
   getByte() {
     return this._view.getUint8(this._position++)
   }
@@ -23,7 +29,7 @@ export default class BufferIterator {
     return bytes
   }
   getBytesAsBuffer(len) {
-    if (len + this._position >= this._view.byteLength) {
+    if (len + this._position > this._byteLength) {
       throw new RangeError()
     }
     let buffer = this._buffer.slice(this._position, this._position + len)
