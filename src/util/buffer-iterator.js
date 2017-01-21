@@ -15,4 +15,11 @@ export default class BufferIterator {
     }
     return bytes
   }
+  getBytesAsArray(len) {
+    let bytes = new Array(len)
+    for (var i = 0; i < len; i++) {
+      bytes[i] = this._view.getUint8(this._position++)
+    }
+    return bytes
+  }
 }

@@ -1,6 +1,14 @@
 import BufferIterator from '../util/buffer-iterator'
+import Bitstream from './bitstream'
 
 export default class OggDecoder extends BufferIterator {
+  constructor(buffer) {
+    super(buffer)
+    this._bitstreams = []
+  }
+  hasBitstream(serialNumber) {
+
+  }
   decodeHeader() {
     // 'OggS' in ASCII (RFC 3533 6.1)
     const CAPTURE_PATTERN = 0x4f676753

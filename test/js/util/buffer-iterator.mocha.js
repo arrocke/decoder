@@ -85,5 +85,32 @@ describe('BufferIterator', () => {
         expect(iterator.getBytes.bind(iterator, 4)).to.throw(Error)
       })
     })
+
+    describe('getBytesAsArray()', () => {
+      it('It should return the bytes as an array.', () => {
+        initIterator()
+        let pos = iterator._position
+        let len = 4
+        expect(iterator.getBytesAsArray(len)).to.eql([
+          view.getUint8(0),
+          view.getUint8(1),
+          view.getUint8(2),
+          view.getUint8(3)
+        ])
+      })
+
+      it('It should increment the position of the iterator.', () => {
+        initIterator()
+        let pos = iterator._position
+        let len = 4
+        iterator.getBytesAsArray(len)
+        expect(iterator._position).to.equal(pos + len)
+      })
+
+      it('It should throw an error if read past the end of the buffer.', () => {
+        initIterator(0, 1)
+        expect(iterator.getBytesAsArray.bind(iterator, 4)).to.throw(Error)
+      })
+    })
   })
 })
