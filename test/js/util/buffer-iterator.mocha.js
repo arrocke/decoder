@@ -127,27 +127,28 @@ describe('BufferIterator', () => {
       })
     })
 
-    describe('getBytesAsBuffer()', () => {
-      it('It should return the bytes as an ArrayBuffer.', () => {
+    describe('getBytesAsDataView()', () => {
+      it('It should return the bytes as an DataView.', () => {
         initIterator()
         let pos = iterator._position
         let len = 4
-        let buffer = iterator.getBytesAsBuffer(len)
-        let view = new DataView(buffer)
-        expect(view.getUint32(0)).to.eql(view.getUint32(pos))
+        let view = iterator.getBytesAsDataView(len)
+        expect(view.buffer).to.equal(buffer)
+        expect(view.byteOffset).to.equal(pos)
+        expect(view.byteLength).to.equal(len)
       })
 
       it('It should increment the position of the iterator.', () => {
         initIterator()
         let pos = iterator._position
         let len = 4
-        iterator.getBytesAsBuffer(len)
+        iterator.getBytesAsDataView(len)
         expect(iterator._position).to.equal(pos + len)
       })
 
       it('It should throw an error if read past the end of the buffer.', () => {
         initIterator(0, 1)
-        expect(iterator.getBytesAsBuffer.bind(iterator, 4)).to.throw(Error)
+        expect(iterator.getBytesAsDataView.bind(iterator, 4)).to.throw(Error)
       })
     })
   })

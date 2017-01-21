@@ -28,12 +28,12 @@ export default class BufferIterator {
     }
     return bytes
   }
-  getBytesAsBuffer(len) {
-    if (len + this._position > this._byteLength) {
+  getBytesAsDataView(len) {
+    if (this._position + len > this._byteLength) {
       throw new RangeError()
     }
-    let buffer = this._buffer.slice(this._position, this._position + len)
+    let view = new DataView(this._buffer, this._position, len)
     this._position += len
-    return buffer
+    return view
   }
 }
