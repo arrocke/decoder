@@ -28,6 +28,8 @@ describe('OggDecoder', () => {
           expect(bitstreams[0]).to.be.instanceOf(Bitstream)
           expect(bitstreams[1]).to.be.instanceOf(Bitstream)
         })
+
+        it('It should')
       })
 
       describe('for invalid ogg files', () => {
@@ -37,6 +39,9 @@ describe('OggDecoder', () => {
           decoder = new OggDecoder(buffer)
         })
 
+        it('It should throw an error if a bitstream has a second BOS page.', () => {
+
+        })
       })
     })
 
