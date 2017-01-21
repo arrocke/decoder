@@ -22,4 +22,12 @@ export default class BufferIterator {
     }
     return bytes
   }
+  getBytesAsBuffer(len) {
+    if (len + this._position >= this._view.byteLength) {
+      throw new RangeError()
+    }
+    let buffer = this._buffer.slice(this._position, this._position + len)
+    this._position += len
+    return buffer
+  }
 }
