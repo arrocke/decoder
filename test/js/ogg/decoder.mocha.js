@@ -37,7 +37,7 @@ describe('OggDecoder', () => {
         })
 
         it('It should decode and save the page sequence number.', () => {
-          expect(page.pageSequenceNumber).to.equal(0)
+          expect(page.pageNumber).to.equal(0)
         })
 
         it('It should decode the segmentTable', () => {
@@ -48,6 +48,10 @@ describe('OggDecoder', () => {
           expect(page.view.buffer).to.equal(buffer)
           expect(page.view.byteOffset).to.equal(28)
           expect(page.view.byteLength).to.equal(0x40)
+        })
+
+        it('It should add page to its logical bitstream.', () => {
+          expect(decoder.getLogicalBitstream(page.bitstreamSerialNumber)[0]).to.equal(page)
         })
       })
 
@@ -62,66 +66,35 @@ describe('OggDecoder', () => {
           expect(decoder.decodePage.bind(decoder)).to.throw(Error)
         })
 
-        it('It should throw an error if the CRC check sum is invalid.', () => {
-          view.setUint(22, 255)
+        it('It should throw an error if a non-BOS page is from a new bitstream.', () => {
+          view.setUint8(5, OggDecoder.FRESH_PACKET)
           expect(decoder.decodePage.bind(decoder)).to.throw(Error)
         })
-      })
-    })
 
-    describe('decode()', () => {
-      describe('for valid ogg files', () => {
-        var bitstreams
-
-        before(() => {
-          buffer = createBuffer(validVideo)
-          view = new DataView(buffer)
-          decoder = new OggDecoder(buffer)
-          bitstreams = decoder.decode()
+        it('It should throw an Error if a BOS page is found for an already existing bistream.', () => {
+          view.setUint8(225, OggDecoder.BOS)
+          decoder.decodePage()
+          decoder.decodePage()
+          decoder.decodePage()
+          expect(decoder.decodePage.bind(decoder)).to.throw(Error)
         })
 
-        it('It should return an array of bitstreams.', () => {
-          expect(bitstreams[0]).to.be.instanceOf(Bitstream)
-          expect(bitstreams[1]).to.be.instanceOf(Bitstream)
+        it('It should throw an Error if a BOS page is found in the middle of a stream.', () => {
+          view.setUint8(7732, OggDecoder.BOS)
+          view.setUint32(7741, 0)
+          decoder.decodePage()
+          decoder.decodePage()
+          decoder.decodePage()
+          decoder.decodePage()
+          decoder.decodePage()
+          decoder.decodePage()
+          expect(decoder.decodePage.bind(decoder)).to.throw(Error)
         })
 
-        it('It should')
-      })
-
-      describe('for invalid ogg files', () => {
-        beforeEach(() => {
-          buffer = createBuffer(validVideo)
-          view = new DataView(buffer)
-          decoder = new OggDecoder(buffer)
+        it('It should throw an error if the CRC check sum is invalid.', () => {
+          view.setUint8(22, 255)
+          expect(decoder.decodePage.bind(decoder)).to.throw(Error)
         })
-
-        it('It should throw an error if a bitstream has a second BOS page.', () => {
-
-        })
-      })
-    })
-
-    describe.skip('decodeHeader', () => {
-      it('It should throw an error if the capture pattern is not found.', () => {
-        view.setUint8(1, 0)
-        expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
-      })
-
-      it('It should not throw an error if the capture pattern is found.', () => {
-        expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
-      })
-
-      it('It should throw an error if the stream structure version is invalid.', () => {
-        view.setUint8(4, 1)
-        expect(decoder.decodeHeader.bind(decoder)).to.throw(Error)
-      })
-
-      it('It should not throw an error if the stream sturcture version is correct.', () => {
-        expect(decoder.decodeHeader.bind(decoder)).to.not.throw(Error)
-      })
-
-      it('It should add a new bitstream if the header as a header type of BOS.', () => {
-        deocder.decodeHeader()
       })
     })
   })

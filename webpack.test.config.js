@@ -3,6 +3,7 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
   entry: glob.sync('./test/**/*.mocha.js'),
+  devtool: 'source-map',
   output: {
     path: __dirname + '/dist',
     filename: 'tests.js',
