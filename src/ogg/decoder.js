@@ -64,9 +64,12 @@ export default class OggDecoder extends BufferIterator {
     // Decode the segment table. (RFC 3533 6.9)
     let segmentTable = this.getBytesAsArray(pageSegmentCount)
 
-    // Find the total size of the payload
+    // Find the total size of the payload.
     let payloadSize = 0
     segmentTable.forEach(x => payloadSize += x)
+
+    // Find the total size of the page.
+    let pageSize = payloadSize + pageSegmentCount + 27
 
     // Create the page view.
     let pageView = this.getBytesAsDataView(payloadSize)
