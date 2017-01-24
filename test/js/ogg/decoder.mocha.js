@@ -47,7 +47,7 @@ describe('OggDecoder', () => {
         it('It should create a view to the page payload.', () => {
           expect(page.view.buffer).to.equal(buffer)
           expect(page.view.byteOffset).to.equal(28)
-          expect(page.view.byteLength).to.equal(0x40)
+          expect(page.view.byteLength).to.equal(64)
         })
 
         it('It should add page to its logical bitstream.', () => {
