@@ -1,6 +1,7 @@
 import BufferIterator from '../util/buffer-iterator'
 import Bitstream from './bitstream'
 import OggPage from './page'
+import crc32 from '../util/crc32'
 
 export default class OggDecoder extends BufferIterator {
   constructor(buffer) {
@@ -80,7 +81,11 @@ export default class OggDecoder extends BufferIterator {
     // Create the page view.
     page.view = this.getBytesAsDataView(payloadSize)
 
-    // TODO: Verify check sum
+    let checksumView = new DataView(this._buffer, page.pagePosition, pageSize)
+    checksumView.setUint32(22, 0)
+    if (0 != crc32(checksumView, crcChecksum)) {
+      throw new Error();
+    }
 
     // Verify stream structure version
     if (streamStructureVersion != OggDecoder.STREAM_STRUCTURE_VERSION) {
