@@ -13,18 +13,32 @@ export default class BufferIterator {
   getByte() {
     return this._view.getUint8(this._position++)
   }
-  getBytes(len) {
+  getBytes(len, isLitteEndian = false) {
     let bytes = 0
-    for (var i = 0; i < len; i++) {
-      bytes *= 256
-      bytes += this._view.getUint8(this._position++)
+    if (isLitteEndian) {
+      for (var i = 0; i < len; i++) {
+        bytes += Math.pow(2, 8 * i) * this._view.getUint8(this._position++)
+      }
+    }
+    else {
+      for (var i = 0; i < len; i++) {
+        bytes *= 256
+        bytes += this._view.getUint8(this._position++)
+      }
     }
     return bytes
   }
-  getBytesAsArray(len) {
+  getBytesAsArray(len, isLitteEndian = false) {
     let bytes = new Array(len)
-    for (var i = 0; i < len; i++) {
-      bytes[i] = this._view.getUint8(this._position++)
+    if (isLitteEndian) {
+      for (var i = 0; i < len; i++) {
+        bytes[len - i - 1] = this._view.getUint8(this._position++)
+      }
+    }
+    else {
+      for (var i = 0; i < len; i++) {
+        bytes[i] = this._view.getUint8(this._position++)
+      }
     }
     return bytes
   }

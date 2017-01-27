@@ -86,6 +86,13 @@ describe('BufferIterator', () => {
         expect(iterator.getBytes(4)).to.equal(view.getUint32(pos))
       })
 
+      it('It should return the bytes in reverse order if the little-endian flag is set.', () => {
+        initIterator()
+        let pos = iterator._position
+        let expected = view.getUint8(pos) | view.getUint8(pos + 1) << 8 | view.getUint8(pos + 2) << 16 | view.getUint8(pos + 3) << 24
+        expect(iterator.getBytes(4, true)).to.equal(expected)
+      })
+
       it('It should increment the position of the iterator.', () => {
         initIterator()
         let pos = iterator._position
@@ -106,10 +113,21 @@ describe('BufferIterator', () => {
         let pos = iterator._position
         let len = 4
         expect(iterator.getBytesAsArray(len)).to.eql([
-          view.getUint8(0),
-          view.getUint8(1),
-          view.getUint8(2),
-          view.getUint8(3)
+          view.getUint8(pos + 0),
+          view.getUint8(pos + 1),
+          view.getUint8(pos + 2),
+          view.getUint8(pos + 3)
+        ])
+      })
+
+      it('It should return the bytes in reverse order if the little-endian flag is set.', () => {
+        initIterator()
+        let pos = iterator._position
+        expect(iterator.getBytesAsArray(4, true)).to.eql([
+          view.getUint8(pos + 3),
+          view.getUint8(pos + 2),
+          view.getUint8(pos + 1),
+          view.getUint8(pos + 0)
         ])
       })
 
