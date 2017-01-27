@@ -24,5 +24,6 @@ export default function crc32(view, check) {
       ^ (DIVISOR * (buffer >>> 31))
   }
 
-  return buffer ^ FINAL_XOR
+  buffer = buffer ^ FINAL_XOR
+  return (buffer >>> 1) * 2 + (buffer & 1)
 }

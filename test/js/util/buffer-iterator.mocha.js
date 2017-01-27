@@ -89,7 +89,10 @@ describe('BufferIterator', () => {
       it('It should return the bytes in reverse order if the little-endian flag is set.', () => {
         initIterator()
         let pos = iterator._position
-        let expected = view.getUint8(pos) | view.getUint8(pos + 1) << 8 | view.getUint8(pos + 2) << 16 | view.getUint8(pos + 3) << 24
+        let expected = view.getUint8(pos)
+          + view.getUint8(pos + 1) * Math.pow(2, 8)
+          + view.getUint8(pos + 2) * Math.pow(2, 16)
+          + view.getUint8(pos + 3) * Math.pow(2, 24)
         expect(iterator.getBytes(4, true)).to.equal(expected)
       })
 

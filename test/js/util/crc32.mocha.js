@@ -19,7 +19,10 @@ describe('validateCRC32()', () => {
   it('It should return true if the page is valid.', () => {
     buffer = createBuffer(validVideo)
     view = new DataView(buffer, 0, 92)
-    checksum = view.getUint8(22) | view.getUint8(23) << 8 | view.getUint8(24) << 16 | view.getUint8(25) << 24
+    checksum = view.getUint8(22)
+      + view.getUint8(23) * Math.pow(2, 8)
+      + view.getUint8(24) * Math.pow(2, 16)
+      + view.getUint8(25) * Math.pow(2, 24)
     view.setUint32(22, 0)
     expect(crc32(view)).to.equal(checksum)
     expect(crc32(view, checksum)).to.equal(0)
