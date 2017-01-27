@@ -1,6 +1,5 @@
 import {expect} from 'chai'
 import OggDecoder from '../../../src/ogg/decoder'
-import Bitstream from '../../../src/ogg/bitstream'
 import createBuffer from '../buffers/create-buffer'
 import validVideo from '../buffers/valid-video'
 
