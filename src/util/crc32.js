@@ -19,8 +19,9 @@ export default function crc32(view, check) {
 
   // Divide and shift for each bit.
   for (let pos = 0; pos < newView.byteLength * 8; pos++) {
-    buffer = (buffer << 1) | ((newView.getUint8(pos >>> 3) << (24 + pos % 8)) >>> 31)
-    buffer = buffer ^ (DIVISOR * buffer >>> 31)
+    buffer = ((buffer << 1)
+      | ((newView.getUint8(pos >>> 3) << (24 + pos % 8)) >>> 31))
+      ^ (DIVISOR * (buffer >>> 31))
   }
 
   return buffer ^ FINAL_XOR

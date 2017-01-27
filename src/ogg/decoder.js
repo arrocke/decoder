@@ -54,16 +54,16 @@ export default class OggDecoder extends BufferIterator {
     page.headerType = this.getByte()
 
     // Decode the granule position. (RFC 3533 6.4)
-    page.granulePosition = this.getBytesAsArray(8)
+    page.granulePosition = this.getBytesAsArray(8, true)
 
     // Decode the bitstream serial number. (RFC 3533 6.5)
-    page.bitstreamSerialNumber = this.getBytes(4)
+    page.bitstreamSerialNumber = this.getBytes(4, true)
 
     // Decode the page sequence number. (RFC 3533 6.6)
-    page.pageNumber = this.getBytes(4)
+    page.pageNumber = this.getBytes(4, true)
 
     // Decode the CRC checksum. (RFC 3533 6.7)
-    let crcChecksum = this.getBytes(4)
+    let crcChecksum = this.getBytes(4, true)
 
     // Decode the number of page segments. (RFC 3533 6.8)
     let pageSegmentCount = this.getByte()

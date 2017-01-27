@@ -33,7 +33,7 @@ describe('OggDecoder', () => {
         })
 
         it('It should decode and save the bitstream serial number.', () => {
-          expect(page.bitstreamSerialNumber).to.equal(0x80bc815f)
+          expect(page.bitstreamSerialNumber).to.equal(0x5f81bc80)
         })
 
         it('It should decode and save the page sequence number.', () => {
