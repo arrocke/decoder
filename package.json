@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "A javascript library to facilitate deocoding open source bitstreams.",
   "scripts": {
+    "build": "webpack"
   },
   "devDependencies": {
+    "webpack": "^2.2.1"
   }
 }
