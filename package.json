@@ -4,11 +4,13 @@
   "description": "A javascript library to facilitate deocoding open source bitstreams.",
   "scripts": {
     "build": "webpack",
-    "build-tests": "webpack --config spec/support/webpack.config.js",
-    "test": "jasmine"
+    "build:tests": "webpack --config spec/support/webpack.config.js",
+    "test": "jasmine",
+    "watch:tests": "nodemon --exec jasmine"
   },
   "devDependencies": {
     "jasmine": "^2.5.3",
+    "nodemon": "^1.11.0",
     "webpack": "^2.2.1"
   }
 }
