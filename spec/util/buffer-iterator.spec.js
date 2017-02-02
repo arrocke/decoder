@@ -249,15 +249,22 @@ describe('BufferIterator', function () {
 
     describe('nextBits()', function () {
       it ('It returns the correct value of the bits', function () {
-        this._pos = 1;
-        this._bitPos = 3;
-        var expected = ((array[1] & 0b111111) << 3) + ((array[2] & 0b11100000) >>> 5)
-        expect(iterator.nextBits(9)).toEqual(expected);
+        array[0] = 0b10101010;
+        array[1] = 0b01010101;
+        array[2] = 0b11001100;
+        array[3] = 0b00110011;
+        expect(iterator.nextBits(5)).toEqual(0b10101);
+        expect(iterator.nextBits(5)).toEqual(0b01001);
+        expect(iterator.nextBits(17)).toEqual(0b01010111001100001);
+        expect(iterator.nextBits(5)).toEqual(0b10011);
       });
 
       it('It increments the position of the iterator.', function () {
-        this._pos = 1;
-        this._bitPos = 3;
+        iterator._pos = 1;
+        iterator._bitPos = 0;
+        iterator.nextBits(3);
+        expect(iterator._pos).toEqual(1);
+        expect(iterator._bitPos).toEqual(3);
         iterator.nextBits(9);
         expect(iterator._pos).toEqual(2);
         expect(iterator._bitPos).toEqual(4);

@@ -113,6 +113,15 @@ BufferIterator.prototype.nextBits = function (n) {
     throw new RangeError('Offset is outside the bounds of the BufferIterator');
   }
 
+  var val = 0;
+  for (var i = 0; i < n; i++) {
+    var byte = this._array[this._pos];
+    val = val * 2 + ((byte >> 7 - this._bitPos) & 1);
+    this._pos += Math.floor((this._bitPos + 1) / 8);
+    this._bitPos = (this._bitPos + 1) % 8;
+  }
+
+  return val;
 };
 
 module.exports = BufferIterator;
