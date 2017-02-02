@@ -9,7 +9,10 @@ function BufferIterator(buffer, options) {
   // Default offset is 0.
   // Default length is the length from the offset to the end of the buffer.
   var offset = options.byteOffset || 0;
-  var length = options.byteLength || (buffer.byteLength - offset);
+  var length = options.byteLength;
+  if (length == undefined) {
+    length = buffer.byteLength - offset;
+  }
 
   if (offset + length > buffer.byteLength) {
     throw new RangeError('Invalid BufferIterator length');
@@ -63,7 +66,7 @@ BufferIterator.prototype.nextBytes = function (n) {
   if (this._bitPos !== 0) {
     throw new Error('BufferIterator is off the byte boundary')
   }
-  if (n < 1 || n > 6 || n % 1 !== 0) {
+  if (n < 0 || n > 6 || n % 1 !== 0) {
     throw new TypeError('First argument for nextBytes must be a positive integer less than 6');
   }
   if (this._pos + n > this.byteLength) {
@@ -90,7 +93,7 @@ BufferIterator.prototype.nextBytesAsBufferIterator = function (n) {
   if (this._bitPos !== 0) {
     throw new Error('BufferIterator is off the byte boundary')
   }
-  if (n < 1 || n % 1 !== 0) {
+  if (n < 0 || n % 1 !== 0) {
     throw new TypeError('First argument for nextBytesAsBufferIterator must be a positive integer');
   }
   if (this._pos + n > this.byteLength) {
@@ -106,7 +109,7 @@ BufferIterator.prototype.nextBytesAsBufferIterator = function (n) {
 };
 
 BufferIterator.prototype.nextBits = function (n) {
-  if (n < 1 || n > 52 || n % 1 !== 0) {
+  if (n < 0 || n > 52 || n % 1 !== 0) {
     throw new TypeError('First argument for nextBits must be a positive integer less than 52');
   }
   if (this._pos + (this._bitPos + n) / 8 > this.byteLength) {

@@ -24,6 +24,17 @@ describe('BufferIterator', function () {
       }).toThrowError(TypeError, 'First argument to BufferIterator must be an ArrayBuffer');
     });
 
+    it('It can have a byteLength of 0.', function () {
+      var buffer = new ArrayBuffer(10);
+      var iterator;
+      expect(function () {
+        iterator = new BufferIterator(buffer, {
+          byteLength: 0
+        });
+      }).not.toThrowError();
+      expect(iterator._array.byteLength).toEqual(0);
+    });
+
     it('It should not require any of the options.', function () {
       var buffer = new ArrayBuffer(10);
       var iterator;
@@ -160,6 +171,10 @@ describe('BufferIterator', function () {
     });
 
     describe('nextBytes()', function () {
+      it('It returns 0 if zero bytes are requested.', function () {
+        expect(iterator.nextBytes(0)).toEqual(0);
+      });
+
       it('It returns the correct value of the bytes.', function () {
         iterator._pos = 1;
         iterator._lEndian = false;
@@ -178,7 +193,7 @@ describe('BufferIterator', function () {
         expect(iterator._pos).toEqual(3);
       });
 
-      it('It can only read positive integer amounts of bytes.', function () {
+      it('It can only read whole number amounts of bytes.', function () {
         iterator._pos = 1;
         expect(function () {
           iterator.nextBytes('test')
@@ -209,6 +224,15 @@ describe('BufferIterator', function () {
     });
 
     describe('nextBytesAsBufferIterator()', function () {
+      it('It returns an empty BufferIterator if the 0 bytes are requested.', function () {
+        iterator._pos = 1;
+        var newIterator = iterator.nextBytesAsBufferIterator(0);
+        expect(newIterator._array.buffer).toBe(iterator._array.buffer);
+        expect(newIterator.byteOffset).toEqual(1);
+        expect(newIterator.byteLength).toEqual(0);
+        expect(newIterator.littleEndian).toBe(false);
+      });
+
       it('It returns a BufferIterator with the correct byteOffset and byteLength', function () {
         iterator._pos = 1;
         var newIterator = iterator.nextBytesAsBufferIterator(8);
@@ -224,7 +248,7 @@ describe('BufferIterator', function () {
         expect(iterator._pos).toEqual(9);
       });
 
-      it('It can only read positive integer amounts of bytes.', function () {
+      it('It can only read whole number amounts of bytes.', function () {
         iterator._pos = 1;
         expect(function () {
           iterator.nextBytesAsBufferIterator('test')
@@ -248,6 +272,10 @@ describe('BufferIterator', function () {
     });
 
     describe('nextBits()', function () {
+      it('It returns 0 if zero bits are requested.', function () {
+        expect(iterator.nextBits(0)).toEqual(0);
+      });
+
       it ('It returns the correct value of the bits', function () {
         array[0] = 0b10101010;
         array[1] = 0b01010101;
@@ -270,7 +298,7 @@ describe('BufferIterator', function () {
         expect(iterator._bitPos).toEqual(4);
       });
 
-      it('It can only read positive integer amounts of bits.', function () {
+      it('It can only read whole number amounts of bits.', function () {
         iterator._pos = 1;
         expect(function () {
           iterator.nextBits('test')
