@@ -82,6 +82,10 @@ describe('PageDecoder', function () {
           }
         });
 
+        it('It adds the page to the list.', function () {
+          expect(decoder.pages).toEqual(pages);
+        });
+
         it('It returns if the page contains a fresh packet.', function () {
           expect(pages[0].hasFreshPacket).toEqual(true);
         });

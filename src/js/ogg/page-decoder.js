@@ -105,6 +105,8 @@ PageDecoder.prototype.nextPage = function () {
 
   page.payload = this._iterator.nextBytesAsBufferIterator(payloadLength);
 
+  this._pages.push(page);
+
   return page;
 };
 
