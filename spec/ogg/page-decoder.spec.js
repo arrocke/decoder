@@ -144,11 +144,11 @@ describe('PageDecoder', function () {
           }).toThrowError('PageDecoder cannot decode page because the stream structure version is invalid')
         });
 
-        xit('It cannot decode a page with an invalid checksum.', function () {
+        it('It cannot decode a page with an invalid checksum.', function () {
           array[22] = 0;
           expect(function () {
             decoder.nextPage();
-          }).toThrowError('PageDecoder cannot decode page because the checksum is invalid.');
+          }).toThrowError('PageDecoder cannot decode page because its checksum is invalid');
         });
       });
     });

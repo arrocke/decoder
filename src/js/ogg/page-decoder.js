@@ -1,4 +1,5 @@
 var BufferIterator = require('../util/buffer-iterator');
+var CRC32 = require('../util/crc32');
 
 function PageDecoder(buffer) {
   if (!(buffer instanceof ArrayBuffer)) {
@@ -7,7 +8,11 @@ function PageDecoder(buffer) {
 
   this._iterator = new BufferIterator(buffer);
   this._pages = [];
-
+  this._crc = new CRC32({
+    polynomial: PageDecoder.CRC_POLYNOMIAL,
+    initialValue: PageDecoder.CRC_INITIAL_VALUE,
+    finalXOR: PageDecoder.CRC_FINAL_XOR
+  });
 }
 
 PageDecoder.CAPTURE_CODE = 0x4f676753;
@@ -16,6 +21,11 @@ PageDecoder.FRESH_PACKET = 0b00000001;
 PageDecoder.BOS = 0b00000010;
 PageDecoder.EOS = 0b00000100;
 PageDecoder.MAX_LACING_VALUE = 255;
+PageDecoder.CRC_POLYNOMIAL = 0x04C11DB7;
+PageDecoder.CRC_INITIAL_VALUE = 0;
+PageDecoder.CRC_FINAL_XOR = 0;
+PageDecoder.HEADER_LENGTH = 27;
+PageDecoder.CRC_OFFSET = 22;
 
 Object.defineProperties(PageDecoder.prototype, {
   pages: {
@@ -32,6 +42,7 @@ Object.defineProperties(PageDecoder.prototype, {
 
 PageDecoder.prototype.nextPage = function () {
   var page = {};
+  var pageOffset = this._iterator.bytePosition;
 
   this._iterator.littleEndian = false;
 
@@ -59,6 +70,7 @@ PageDecoder.prototype.nextPage = function () {
   page.pageNumber = this._iterator.nextBytes(4);
 
   var checksum = this._iterator.nextBytes(4);
+
   var numSegments = this._iterator.nextByte();
 
   page.packetStart = [];
@@ -77,6 +89,18 @@ PageDecoder.prototype.nextPage = function () {
       page.packetStart.push(page.packetStart[page.packetStart.length - 1] + packetLength);
       packetLength = 0;
     }
+  }
+
+  var pageLength = PageDecoder.HEADER_LENGTH + numSegments + payloadLength;
+  var crcBuffer = this._iterator.buffer.slice(pageOffset, pageOffset + pageLength);
+  var crcArray = new Uint8Array(crcBuffer);
+  crcArray[PageDecoder.CRC_OFFSET + 0] = 0;
+  crcArray[PageDecoder.CRC_OFFSET + 1] = 0;
+  crcArray[PageDecoder.CRC_OFFSET + 2] = 0;
+  crcArray[PageDecoder.CRC_OFFSET + 3] = 0;
+
+  if (!this._crc.validate(crcBuffer, checksum)) {
+    throw new Error('PageDecoder cannot decode page because its checksum is invalid');
   }
 
   page.payload = this._iterator.nextBytesAsBufferIterator(payloadLength);
