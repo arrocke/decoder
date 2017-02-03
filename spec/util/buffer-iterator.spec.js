@@ -113,6 +113,16 @@ describe('BufferIterator', function () {
       });
     });
 
+    describe('bytePosition', function () {
+      it('It should return the byte position relative to the ArrayBuffer inside the iterator.', function () {
+        iterator = new BufferIterator(buffer, {
+          byteOffset: 5
+        });
+        iterator._pos = 2;
+        expect(iterator.bytePosition).toEqual(7);
+      });
+    });
+
     describe('hasBytes', function () {
       beforeAll(function () {
         iterator = new BufferIterator(buffer);

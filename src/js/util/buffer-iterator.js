@@ -36,6 +36,21 @@ Object.defineProperties(BufferIterator.prototype, {
       return this._array.byteOffset;
     }
   },
+  bytePosition: {
+    get: function () {
+      return this._array.byteOffset + this._pos;
+    }
+  },
+  bitPosition: {
+    get: function () {
+      return this._bitPos;
+    }
+  },
+  buffer: {
+    get: function () {
+      return this._array.buffer;
+    }
+  },
   hasBytes: {
     get: function () {
       return this._pos < this.byteLength;
