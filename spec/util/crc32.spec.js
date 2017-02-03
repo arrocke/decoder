@@ -46,7 +46,7 @@ describe('CRC32', function () {
     });
   });
 
-  describe('validate', function () {
+  describe('validate()', function () {
     var crc32, buffer, array;
 
     beforeEach(function () {
@@ -58,7 +58,7 @@ describe('CRC32', function () {
       array = new Uint8Array(buffer);
     });
 
-    it('It should return true for a valid page.', function () {
+    it('It returns true for valid pages.', function () {
       var checksum = array[22] | array[23] << 8 | array[24] << 16 | array[25] << 24 ;
       array[22] = 0;
       array[23] = 0;
@@ -67,7 +67,7 @@ describe('CRC32', function () {
       expect(crc32.validate(buffer, checksum)).toBe(true);
     });
 
-    it('It should return false for an invalid page.', function () {
+    it('It returns false for invalid pages.', function () {
       var checksum = array[22] << 24 | array[24] << 8 | array[25];
       array[22] = 0;
       array[23] = 0;
@@ -77,8 +77,8 @@ describe('CRC32', function () {
     });
   });
 
-  describe('calculate', function () {
-    it('It should not return 0 for a random buffer.', function () {
+  describe('calculate()', function () {
+    it('It doesn\'t return 0 for random buffers.', function () {
       var buffer = new ArrayBuffer(10);
       var array = new Uint8Array(buffer);
       for (var i = 0; i < array.byteLength; i++) {

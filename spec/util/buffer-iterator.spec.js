@@ -64,7 +64,7 @@ describe('BufferIterator', function () {
       buffer = new ArrayBuffer(10);
     });
 
-    describe('setLittleEndian', function () {
+    describe('littleEndian', function () {
       beforeEach(function () {
         iterator = new BufferIterator(buffer);
       });
